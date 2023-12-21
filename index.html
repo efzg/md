@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>메디카솔 부스</title>
+  <style>
+    body {
+      background-color: #f2f2f2;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #333333;
+    }
+
+    .wrong-answer {
+      color: red;
+      font-size: 14px;
+    }
+
+    .timer {
+      text-align: right;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .ranking {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .ranking h2 {
+      margin-bottom: 10px;
+    }
+
+    .ranking-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .ranking-list li {
+      margin-bottom: 5px;
+    }
+  </style>
+  <script>
+    var rankingData = [];
+
+    function checkAnswer() {
+      var answer1 = document.querySelector('input[name="answer1"]:checked');
+      var answer2 = document.querySelector('input[name="answer2"]:checked');
+      var answer3 = document.querySelector('input[name="answer3"]:checked');
+
+      if (answer1 && answer2 && answer3) {
+        if (
+          answer1.value === "정답1" &&
+          answer2.value === "정답2" &&
+          answer3.value === "정답3"
+        ) {
+          var nicknameInput = document.getElementById("nickname");
+          var nickname = nicknameInput.value.trim();
+          if (nickname !== "") {
+            var clearTime = document.querySelector('.timer').textContent;
+            rankingData.push({ nickname: nickname, clearTime: clearTime });
+            rankingData.sort(function(a, b) {
+              return a.clearTime.localeCompare(b.clearTime);
+            });
+            showRanking();
+          } else {
+            alert("학번/이름을 입력해주세요.");
+          }
+        } else {
+          var resultMessage = document.getElementById("resultMessage");
+          resultMessage.innerText = "오답입니다. 다시 시도해주세요.";
+          resultMessage.classList.add("wrong-answer");
+        }
+      } else {
+        alert("모든 문제에 답을 입력해주세요.");
+      }
+    }
+
+    function showRanking() {
+      var rankingList = document.getElementById("rankingList");
+      rankingList.innerHTML = "";
+      for (var i = 0; i < rankingData.length; i++) {
+        var listItem = document.createElement("li");
+        listItem.textContent = (i + 1) + ". " + rankingData[i].nickname + " - " + rankingData[i].clearTime;
+        rankingList.appendChild(listItem);
+      }
+      document.getElementById("quizForm").style.display = "none";
+      document.getElementById("ranking").style.display = "block";
+    }
+
+    function startTimer(duration, display) {
+      var timer = duration, minutes, seconds;
+      setInterval(function () {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = minutes + ":" + seconds;
+
+        if (--timer < 0) {
+          clearInterval(timer);
+          alert("시간이 종료되었습니다!");
+          checkAnswer();
+        }
+      }, 1000);
+    }
+
+    function startQuiz() {
+      var threeMinutes = 60 * 3,
+          display = document.querySelector('.timer');
+      startTimer(threeMinutes, display);
+    }
+
+    function onFormSubmit(event) {
+      event.preventDefault();
+      var nicknameInput = document.getElementById("nickname");
+      var nickname = nicknameInput.value;
+      if (nickname.trim() !== "") {
+        if (nickname.includes("[랭킹]")) {
+          showRanking();
+        } else {
+          document.getElementById("quizForm").style.display = "block";
+          document.getElementById("startButton").style.display = "none";
+          startQuiz();
+        }
+      } else {
+        alert("학번/이름을 입력해주세요.");
+      }
+    }
+
+  </script>
+</head>
+<body>
+  <div>
+    <h2>친환경 빈대 퇴치제 만들기</h2>
+    <p>최근 코로나 팬데믹 이후 관광객 이동이 급증, 인력 부족으로 해외 이주 노동자 유입, 불안정한 국제 정세로 각국 난민 증가, 각종 살충제에 대한 빈대의 내성이 증가함에 따라 빈대 출현이 급증하였다. 뉴스에서도 빈대 출현이 급증했다는 사실을 접할 수 있었다. 빈대에 물리게되면 가려움이 찾아온다. 시중에서 판매하는 약으로는 치료가 어려워, 피부과에서 전문적인 치료제를 처방받아야한다. 빈대에 예방하는 것이 중요하다고 볼 수 있다.</p>
+</div>
+<div>
+    <h2>빈대에 대해 알아보자</h2>
+    <p>빈대: 성충은 5~6mm, 납작하게 눌린 타원형으로 진한 갈색을 띄며 피를 빨아 생명을 유지하는 불쾌곤충으로 전세계에서 발견돤다. 감염병을 옮기지는 않으나, 낮에 가구, 침대, 벽 틈 등에 숨어 있다가 주로 잠자는 동안 노출된 피부를 물어 붉은 반점, 가려움증을 유발한다. 또한 야간 활동성으로 저녁보다는 이른 새벽(3~4시)에 흡혈 활동을 한다. </p>
+    <P>주로 발견되는 곳: 침대 매트리스와 침대 프레임 등 침대 주변의 테이블에서도 발견 된다. 벽의 갈라진 틈과 콘센트 내부 그리고 액자 뒷면에서도 드물지 않게 발견된다.</P>
+    <P>물렸을 때: 물린 후 붉은 반점과 같은 발진이 발생하며 가려움증이 빠르면 1시간, 늦으면 14일 이후 나타나 1~5일간 지속된다.</P>
+    <img src="https://mblogthumb-phinf.pstatic.net/MjAyMDA3MDZfMjUx/MDAxNTk0MDQyNzE0NzYy.BJPMNpvvAlOCO1xukiQmUj0Xs3FwWB9c6KBlGg5gcPAg.mGPsZDzB8kovXOZ1kwDttjaKSF1EBcwNqi70TaIjqe0g.JPEG.tjddms6142/%ED%81%AC%EA%B8%B0%EB%B3%80%ED%99%98A_1218_bedbug_bites_MY8B9Y.width-320.jpg?type=w800" width="150" alt="이미지 1">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbuNetV7P4ShzVkYg4EpDqcGJTaBF3KWX2TRSmypyHBXn-qVICJP05lxL-nH0Uis-zDZQ&usqp=CAU" width="400" alt="이미지 1">
+  
+  </div>
+  <h2>퀴즈</h2>
+  <form onsubmit="onFormSubmit(event)">
+    <label for="nickname">학번/이름: </label>
+    <input type="text" id="nickname" required>
+    <br><br>
+    <button type="submit" id="startButton">시작하기</button>
+  </form>
+  <div id="quizForm" style="display: none;">
+    <div class="timer"></div>
+    <form>
+      <h3>문제 1</h3>
+      <p>다음 중 빈대가 발견할 수 있는 곳으로 옳지 않은 곳은?</p>
+      <input type="radio" name="answer1" value="오답1" required> 매트리스
+      <input type="radio" name="answer1" value="오답2"> 액자 뒷면
+      <input type="radio" name="answer1" value="정답1" > 핸드폰
+      <br><br>
+      <h3>문제 2</h3>
+      <p>다음 중 빈대에게 물린 증상으로 옳은 것은?</p>
+      <input type="radio" name="answer2" value="정답2" required> <img src="https://mblogthumb-phinf.pstatic.net/MjAyMDA3MDZfMjUx/MDAxNTk0MDQyNzE0NzYy.BJPMNpvvAlOCO1xukiQmUj0Xs3FwWB9c6KBlGg5gcPAg.mGPsZDzB8kovXOZ1kwDttjaKSF1EBcwNqi70TaIjqe0g.JPEG.tjddms6142/%ED%81%AC%EA%B8%B0%EB%B3%80%ED%99%98A_1218_bedbug_bites_MY8B9Y.width-320.jpg?type=w800" width="100" alt="이미지 1">
+      <input type="radio" name="answer2" value="오답1"> <img src="data:image/jpeg;base64,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" width="100" alt="이미지 2">
+      <input type="radio" name="answer2" value="오답2"> <img src="https://blog.kakaocdn.net/dn/0NJxJ/btqzEhntnFR/I5kky1qdrjZG4t4BEv6gR1/img.png" width="100" alt="이미지 3">
+      <br><br>
+      <h3>문제 3</h3>
+      <p>빈대는 피를 섭취하는가?.</p>
+      <input type="radio" name="answer3" value="정답3" required> 그렇다.
+      <input type="radio" name="answer3" value="오답1"> 그렇지 않다.
+      <br><br>
+      <button type="button" onclick="checkAnswer()">퀴즈 제출</button>
+    </form>
+    <br>
+    <div id="resultMessage"></div>
+  </div>
+  <div id="ranking" class="ranking">
+    <h2>퀴즈 랭킹</h2>
+    <ul id="rankingList" class="ranking-list"></ul>
+  </div>
+</body>
+</html>
